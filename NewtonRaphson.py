@@ -113,14 +113,15 @@ def newtonRaphson(f, h, e):
     error = abs(n - h)
     arr = [] 
     while(error > e):
-        n = h - ((f.evalf(subs={x: h})) / (df.evalf(subs={x: h})))
-
+        
         if(f.evalf(subs={x: h}) == 0):
             break
         
         if(df.evalf(subs={x: h}) == 0):
             print("\nEl metodo de Newton-Raphson no puede ser aplicado")
             return None
+        
+        n = h - ((f.evalf(subs={x: h})) / (df.evalf(subs={x: h})))
 
         error = abs(n - h)
         h = n
