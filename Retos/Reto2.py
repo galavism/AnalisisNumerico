@@ -20,7 +20,7 @@ def cambio_punto_coma(df, col_name):
     return df
 
 def creacion_data(df, columns):
-    df = df.pipe(cambio_punto_coma, "Temp. Interna (C)")
+    df = df.pipe(cambio_punto_coma, 'Temp. Interna (ºC)')
     df_dht = df[:][columns]
     data = df_dht.to_numpy()
     return data
@@ -35,17 +35,17 @@ def eliminacion_porcentaje(data, p):
     return (data, restantes)
 
 #Lectura y transformacion de archivos
-df_pen = pd.read_csv("D:\\Universidad\\Septimo semestre\\Análisis numérico\\quixada.csv", encoding="utf-8", sep=';')
-df_sga = pd.read_csv("D:\\Universidad\\Septimo semestre\\Análisis numérico\\quixada.csv", encoding='utf-8', sep=';')
+df_pen = pd.read_csv('/Users/safer/Desktop/Quinto Semestre Ingeniería de Sistemas/Análisis Numérico/Referencias/Quixada.csv', encoding='utf-8', sep=';')
+df_sga = pd.read_csv('/Users/safer/Desktop/Quinto Semestre Ingeniería de Sistemas/Análisis Numérico/Referencias/Quixera.csv', encoding='utf-8', sep=';')
 n, m = df_pen[df_pen.columns[0]].count(), df_sga[df_sga.columns[0]].count()
 #Creacion indices
 indices_1 = np.arange(n)
 indices_2 = np.arange(m)
 #Anexo nueva columna
-df_pen.insert(24, 'indice', indices_1, False)
-df_sga.insert(24, 'indice', indices_2,False)
-data_pen = df_pen.pipe(creacion_data, ['Dia Juliano', 'Hora', 'Temp. Interna (C)','indice'])
-data_sga = df_sga.pipe(creacion_data, ['Dia Juliano', 'Hora', 'Temp. Interna (C)','indice'])
+df_pen.insert(24, 'Indice', indices_1, False)
+df_sga.insert(24, 'Indice', indices_2,False)
+data_pen = df_pen.pipe(creacion_data, ['Dia Juliano', 'Hora', 'Temp. Interna (ºC)','Indice'])
+data_sga = df_sga.pipe(creacion_data, ['Dia Juliano', 'Hora', 'Temp. Interna (ºC)','Indice'])
 #Establecer una copia de cada conjunto de datos
 org_dp = data_pen
 org_ds = data_sga
@@ -59,25 +59,6 @@ xn_pen = data_pen[:, 3]
 yn_pen = spi.splev(xn_pen, s_pen)
 #Creacion de interpolacion lineal para primera estacion
 f_pen = spi.interp1d(data_pen[:, 3], data_pen[:, 2])
-
-#grafica originales-lineal
-plt.plot(org_dp[:, 3], org_dp[:, 2], 'k-')
-plt.plot(xn_pen, f_pen(xn_pen), 'm-.')
-plt.xlabel("Índice Calculado")
-plt.ylabel("Temperatura Interna")
-plt.title("Primer Punto - Estacion Quixadá")
-plt.legend(['Datos originales',  'Interpolacion Lineal'])
-plt.show()
-
-#grafica originales-Splines
-plt.plot(org_dp[:, 3], org_dp[:, 2], 'k-')
-plt.plot(xn_pen, yn_pen, 'r--')
-plt.xlabel("Índice Calculado")
-plt.ylabel("Temperatura Interna")
-plt.title("Primer Punto - Estacion Quixadá")
-plt.legend(['Datos originales', 'Splines Cubicos'])
-plt.show()
-
 #Grafica de datos originales (primera parte)
 plt.plot(org_dp[:, 3], org_dp[:, 2], 'k-')
 #Grafica de spline cubico (primera parte)
@@ -106,27 +87,9 @@ xn_sga = data_n[:, 3]
 yn_sga = spi.splev(xn_sga, s_sga)
 #Creacion de interpolacion lineal para segunda estacion
 f_sga = spi.interp1d(data_n[:, 3], data_n[:, 2])
-
-#Grafica de datos originles-lineal
-plt.plot(org_ds[:, 3], org_ds[:, 2], 'b-')
-plt.plot(xn_sga, f_pen(xn_sga), 'c-.')
-plt.xlabel("Índice Calculado")
-plt.ylabel("Temperatura Interna")
-plt.title("Segundo Punto - Estacion Quixeramobim")
-plt.legend(['Datos originales',  'Interpolacion Lineal'])
-plt.show()
-
-#grafica de datos originales-Splines
-plt.plot(org_ds[:, 3], org_ds[:, 2], 'b-')
-plt.plot(xn_sga, yn_sga, 'g--')
-plt.xlabel("Índice Calculado")
-plt.ylabel("Temperatura Interna")
-plt.title("Segundo Punto - Estacion Quixeramobim")
-plt.legend(['Datos originales', 'Splines Cubicos'])
-plt.show()
 #Grafica de datos originales (segunda parte)
 plt.plot(org_ds[:, 3], org_ds[:, 2], 'b-')
-#Grafica de interpolacion splines (segunda parte)
+#Grafica de interpolacion lineal (segunda parte)
 plt.plot(xn_sga, yn_sga, 'g--')
 #Grafica de interpolacion lineal (segunda parte)
 plt.plot(xn_sga, f_pen(xn_sga), 'c-.')
